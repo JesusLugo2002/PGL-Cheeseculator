@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     textDark: {
         color: myColors.white,
         fontSize:24,
-    }
+    },
     textSecondary: {
         color: "#060606",
     },
