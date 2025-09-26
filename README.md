@@ -1,2 +1,3 @@
-# PGL-Calculator
-Calculator project for PGL subject
+# PGL-QuesoMath
+
+Nuestra aplicación de calculadora tematizada con queso.

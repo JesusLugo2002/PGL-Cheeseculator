@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "decalculator",
-    "slug": "decalculator",
+    "name": "quesomath",
+    "slug": "quesomath",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "decalculator",
+    "scheme": "quesomath",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
