@@ -36,11 +36,11 @@ export const styles = StyleSheet.create({
         margin: 5,
     },
     textLight: {
-        color: myColors.dark,
+        color: myColors.white,
         fontSize: 24,
     },
     textDark: {
-        color: myColors.white,
+        color: myColors.dark,
         fontSize:24,
     },
     textSecondary: {
