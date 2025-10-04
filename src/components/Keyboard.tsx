@@ -2,6 +2,7 @@ import { styles } from "@/styles/GlobalStyles";
 import { useState } from "react";
 import { View } from "react-native";
 import Button from "./Button";
+import ThemeText from "./ThemeText";
 
 export default function Keyboard() {
     const [highlightNumber, setHighlightNumber] = useState("");
@@ -41,8 +42,26 @@ export default function Keyboard() {
     }
    }
 
+   const highlightNumberDisplay = () => {
+    if (result != null) {
+        return <ThemeText>{result?.toString()}</ThemeText>
+    }
+    if (highlightNumber && highlightNumber.length < 6) {
+        return <ThemeText>{highlightNumber}</ThemeText>
+    }
+    if (highlightNumber == "") {
+        return <ThemeText>0</ThemeText>
+    }
+    return <ThemeText>{highlightNumber}</ThemeText>
+   }
+
    return (
     <>
+    <View>
+        <ThemeText>{otherNumber}</ThemeText>
+        <ThemeText>{operation}</ThemeText> 
+        {highlightNumberDisplay()}
+    </View>
     <View style={styles.row}>
         <Button title="C" onPress={clear}/>
         <Button title="+/-" onPress={() => handleOperationPress("+/-")}/>
