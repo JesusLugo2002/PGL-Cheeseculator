@@ -34,7 +34,26 @@ export default function Keyboard() {
             clear();
             setResult(parseInt(otherNumber) + parseInt(highlightNumber));
             break;
-    
+        case "-":
+            clear();
+            setResult(parseInt(otherNumber) - parseInt(highlightNumber));
+            break;
+        case "x":
+            clear();
+            setResult(parseInt(otherNumber) * parseInt(highlightNumber));
+            break;
+        case "÷":
+            clear();
+            setResult(parseInt(otherNumber) / parseInt(highlightNumber));
+            break;
+        case "%":
+            clear();
+            setResult((parseInt(otherNumber) / parseInt(highlightNumber)) * 100);
+            break;
+        case "√":
+            clear();
+            setResult(Math.sqrt(parseInt(otherNumber)));
+            break;
         default:
             clear();
             setResult(0);
