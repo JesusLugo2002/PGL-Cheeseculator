@@ -11,12 +11,16 @@ export default function Keyboard() {
     const [result, setResult] = useState<Number | null>(null);
 
     const clear = () => {
+        setResult(null);
         setHighlightNumber("");
         setOtherNumber("");
-        setResult(null);
+        setOperation("")
     }
 
     const handleNumberPress = (buttonValue: string) => {
+        if (result != null) {
+            setResult(null);
+        }
         if (highlightNumber.length < 10) {
             setHighlightNumber(highlightNumber + buttonValue);
         }
@@ -24,7 +28,12 @@ export default function Keyboard() {
 
     const handleOperationPress = (buttonValue: string) => {
         setOperation(buttonValue);
-        setOtherNumber(highlightNumber);
+        if (result != null) {
+            setOtherNumber(result.toString());
+            setResult(null);
+        } else {
+            setOtherNumber(highlightNumber)
+        }
         setHighlightNumber("");
     }
 
@@ -91,7 +100,7 @@ export default function Keyboard() {
         <Button title="7" onPress={() => handleNumberPress("7")}/>
         <Button title="8" onPress={() => handleNumberPress("8")}/>
         <Button title="9" onPress={() => handleNumberPress("9")}/>
-        <Button title="X" onPress={() => handleOperationPress("X")}/>
+        <Button title="x" onPress={() => handleOperationPress("x")}/>
     </View>
     <View style={styles.row}>
         <Button title="4" onPress={() => handleNumberPress("4")}/>
