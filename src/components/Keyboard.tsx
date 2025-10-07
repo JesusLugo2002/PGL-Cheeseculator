@@ -25,7 +25,7 @@ export default function Keyboard() {
     }
 
     /**
-     * Cambia el signo del ultimo numero añadido
+     * Cambia el signo del ultimo numero añadido (o el resultado si se esta mostrando)
      */
     const changeSign = () => {
         if (result) {
