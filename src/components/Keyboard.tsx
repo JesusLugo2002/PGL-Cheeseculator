@@ -81,8 +81,10 @@ export default function Keyboard() {
             setHighlightNumber("");
             setResult(null);
         } else {
-            setOtherNumber(highlightNumber == "" ? "0" : highlightNumber);
-            setHighlightNumber("");     
+            if (!otherNumber) {
+                setOtherNumber(highlightNumber == "" ? "0" : highlightNumber);
+                setHighlightNumber("");     
+            }
         }
     }
 
