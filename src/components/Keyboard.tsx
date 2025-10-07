@@ -3,6 +3,7 @@ import { useState } from "react";
 import { View } from "react-native";
 import Button from "./Button";
 import ThemeText from "./ThemeText";
+import Operations from "@/modules/Operations";
 
 export default function Keyboard() {
     const [highlightNumber, setHighlightNumber] = useState("");
@@ -15,6 +16,13 @@ export default function Keyboard() {
         setHighlightNumber("");
         setOtherNumber("");
         setOperation("")
+    }
+
+    const changeSign = () => {
+        if (highlightNumber) {
+            const num = Number(highlightNumber);
+            setHighlightNumber((num * -1).toString())
+        }
     }
 
     const handleNumberPress = (buttonValue: string) => {
@@ -30,30 +38,37 @@ export default function Keyboard() {
         setOperation(buttonValue);
         if (result != null) {
             setOtherNumber(result.toString());
+            setHighlightNumber("");
             setResult(null);
         } else {
-            setOtherNumber(highlightNumber)
+            setOtherNumber(highlightNumber == "" ? "0" : highlightNumber);
+            setHighlightNumber("");
         }
-        setHighlightNumber("");
     }
 
    const getResult = () => {
+    if (otherNumber == "") {
+        setOtherNumber("0");
+    }
+    if (highlightNumber == "") {
+        setHighlightNumber("0");
+    }
     switch (operation) {
         case "+":
             clear();
-            setResult(parseInt(otherNumber) + parseInt(highlightNumber));
+            setResult(Operations.add(otherNumber, highlightNumber));
             break;
         case "-":
             clear();
-            setResult(parseInt(otherNumber) - parseInt(highlightNumber));
+            setResult(Operations.substract(otherNumber, highlightNumber));
             break;
         case "x":
             clear();
-            setResult(parseInt(otherNumber) * parseInt(highlightNumber));
+            setResult(Operations.multiply(otherNumber, highlightNumber));
             break;
         case "÷":
             clear();
-            setResult(parseInt(otherNumber) / parseInt(highlightNumber));
+            setResult(Operations.divide(otherNumber, highlightNumber));
             break;
         case "%":
             clear();
@@ -83,6 +98,10 @@ export default function Keyboard() {
     return <ThemeText>{highlightNumber}</ThemeText>
    }
 
+   console.log(highlightNumber);
+   console.log(otherNumber);
+   console.log(result)
+
    return (
     <>
     <View>
@@ -92,7 +111,7 @@ export default function Keyboard() {
     </View>
     <View style={styles.row}>
         <Button title="C" onPress={clear}/>
-        <Button title="+/-" onPress={() => handleOperationPress("+/-")}/>
+        <Button title="+/-" onPress={() => changeSign()}/>
         <Button title="%" onPress={() => handleOperationPress("%")}/>
         <Button title="÷" onPress={() => handleOperationPress("÷")}/>
     </View>
@@ -115,8 +134,8 @@ export default function Keyboard() {
         <Button title="+" onPress={() => handleOperationPress("+")}/>
     </View>
     <View style={styles.row}>
-        <Button title="." onPress={() => handleNumberPress("1")}/>
-        <Button title="0" onPress={() => handleNumberPress("2")}/>
+        <Button title="." onPress={() => alert("Work in progress")}/>
+        <Button title="0" onPress={() => handleNumberPress("0")}/>
         <Button title="⌫" onPress={() => setHighlightNumber(highlightNumber.slice(0, -1))}/>
         <Button title="=" onPress={() => getResult()}/>
     </View>
