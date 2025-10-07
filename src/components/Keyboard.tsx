@@ -1,9 +1,10 @@
+import Operations from "@/modules/Operations";
 import { styles } from "@/styles/GlobalStyles";
 import { useState } from "react";
 import { View } from "react-native";
 import Button from "./Button";
 import ThemeText from "./ThemeText";
-import Operations from "@/modules/Operations";
+
 
 export default function Keyboard() {
     const [highlightNumber, setHighlightNumber] = useState("");
@@ -13,6 +14,9 @@ export default function Keyboard() {
 
     const maxNumberDisplayLength = 10;
 
+    /**
+     * Restablece la calculadora a su estado inicial
+     */
     const clear = () => {
         setHighlightNumber("");
         setOtherNumber("");
@@ -20,6 +24,9 @@ export default function Keyboard() {
         setResult(null);
     }
 
+    /**
+     * Cambia el signo del ultimo numero añadido
+     */
     const changeSign = () => {
         if (highlightNumber) {
             const num = Number(highlightNumber);
@@ -27,24 +34,30 @@ export default function Keyboard() {
         }
     }
 
+    /**
+     * Añade el punto decimal (si ya hay un punto, no lo hace)
+     */
     const setFloating = () => {
         if (!highlightNumber.includes(".")) {
-            if (highlightNumber == "") {
-                setHighlightNumber("0.");
-            } else {
-                setHighlightNumber(highlightNumber + ".");
-            }
+            setHighlightNumber(highlightNumber ? highlightNumber + "." : "0.")
         }
     }
 
+    /**
+     * Elimina el ultimo digito
+     */
     const handleRemoveDigit = () => {
         if (highlightNumber) {
             setHighlightNumber(highlightNumber.slice(0, -1));
         }
     }
 
+    /**
+     * Imprime en la pantalla el numero (si se esta mostrando un resultado, sobrescribe el resultado)
+     * @param {any} buttonValue El valor numerico del boton
+     */
     const handleNumberPress = (buttonValue: string) => {
-        if (!highlightNumber && buttonValue == "0") {
+        if (highlightNumber == "0" && buttonValue == "0") {
             return;
         }
 
@@ -57,6 +70,10 @@ export default function Keyboard() {
         }
     }
 
+    /**
+     * Establece el operador para realizar la operacion matematica
+     * @param {any} buttonValue El operador
+     */
     const handleOperationPress = (buttonValue: string) => {
         setOperation(buttonValue);
         if (result) {
@@ -69,6 +86,9 @@ export default function Keyboard() {
         }
     }
 
+    /**
+     * Muestra el resultado en pantalla
+     */
     const handleGetResult = () => {
         if (operation) {
             clear();
@@ -76,6 +96,9 @@ export default function Keyboard() {
         }
     }
 
+   /**
+    * Devuelve el resultado dependiendo del operador asignado
+    */
    const getResult = () => {
     switch (operation) {
         case "+":
@@ -91,15 +114,12 @@ export default function Keyboard() {
     }
    }
 
+   /**
+    * Genera la etiqueta donde se muestra el ultimo numero añadido o el resultado (si ya se ha procesado)
+    */
    const highlightNumberDisplay = () => {
-    if (result != null) {
+    if (result) {
         return <ThemeText>{result?.toString()}</ThemeText>
-    }
-    if (highlightNumber && highlightNumber.length < 6) {
-        return <ThemeText>{highlightNumber}</ThemeText>
-    }
-    if (highlightNumber == "") {
-        return <ThemeText>0</ThemeText>
     }
     return <ThemeText>{highlightNumber}</ThemeText>
    }
@@ -107,9 +127,7 @@ export default function Keyboard() {
    return (
     <>
     <View>
-        <ThemeText>{otherNumber}</ThemeText>
-        <ThemeText>{operation}</ThemeText> 
-        {highlightNumberDisplay()}
+        <ThemeText>{otherNumber}{operation}{highlightNumberDisplay()}</ThemeText>        
     </View>
     <View style={styles.row}>
         <Button title="C" onPress={clear}/>
