@@ -29,7 +29,7 @@ export default function Keyboard() {
      */
     const changeSign = () => {
         if (highlightNumber) {
-            const num = Number(highlightNumber);
+            let num = Number(highlightNumber);
             setHighlightNumber((num * -1).toString())
         }
     }
@@ -122,6 +122,9 @@ export default function Keyboard() {
    const highlightNumberDisplay = () => {
     if (result) {
         return <ThemeText>{result?.toString()}</ThemeText>
+    }
+    if (Number(highlightNumber) < 0) {
+        return <ThemeText>({highlightNumber})</ThemeText>
     }
     return <ThemeText>{highlightNumber}</ThemeText>
    }
