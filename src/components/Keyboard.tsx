@@ -11,11 +11,13 @@ export default function Keyboard() {
     const [operation, setOperation] = useState("");
     const [result, setResult] = useState<Number | null>(null);
 
+    const maxNumberDisplayLength = 10;
+
     const clear = () => {
-        setResult(null);
         setHighlightNumber("");
         setOtherNumber("");
         setOperation("")
+        setResult(null);
     }
 
     const changeSign = () => {
@@ -25,63 +27,67 @@ export default function Keyboard() {
         }
     }
 
+    const setFloating = () => {
+        if (!highlightNumber.includes(".")) {
+            if (highlightNumber == "") {
+                setHighlightNumber("0.");
+            } else {
+                setHighlightNumber(highlightNumber + ".");
+            }
+        }
+    }
+
+    const handleRemoveDigit = () => {
+        if (highlightNumber) {
+            setHighlightNumber(highlightNumber.slice(0, -1));
+        }
+    }
+
     const handleNumberPress = (buttonValue: string) => {
+        if (!highlightNumber && buttonValue == "0") {
+            return;
+        }
+
         if (result != null) {
             setResult(null);
         }
-        if (highlightNumber.length < 10) {
+
+        if (highlightNumber.length < maxNumberDisplayLength) {
             setHighlightNumber(highlightNumber + buttonValue);
         }
     }
 
     const handleOperationPress = (buttonValue: string) => {
         setOperation(buttonValue);
-        if (result != null) {
+        if (result) {
             setOtherNumber(result.toString());
             setHighlightNumber("");
             setResult(null);
         } else {
             setOtherNumber(highlightNumber == "" ? "0" : highlightNumber);
-            setHighlightNumber("");
+            setHighlightNumber("");     
+        }
+    }
+
+    const handleGetResult = () => {
+        if (operation) {
+            clear();
+            setResult(getResult());
         }
     }
 
    const getResult = () => {
-    if (otherNumber == "") {
-        setOtherNumber("0");
-    }
-    if (highlightNumber == "") {
-        setHighlightNumber("0");
-    }
     switch (operation) {
         case "+":
-            clear();
-            setResult(Operations.add(otherNumber, highlightNumber));
-            break;
+            return Operations.add(otherNumber, highlightNumber);
         case "-":
-            clear();
-            setResult(Operations.substract(otherNumber, highlightNumber));
-            break;
+            return Operations.substract(otherNumber, highlightNumber);
         case "x":
-            clear();
-            setResult(Operations.multiply(otherNumber, highlightNumber));
-            break;
+            return Operations.multiply(otherNumber, highlightNumber);
         case "÷":
-            clear();
-            setResult(Operations.divide(otherNumber, highlightNumber));
-            break;
-        case "%":
-            clear();
-            setResult((parseInt(otherNumber) / parseInt(highlightNumber)) * 100);
-            break;
-        case "√":
-            clear();
-            setResult(Math.sqrt(parseInt(otherNumber)));
-            break;
+            return Operations.divide(otherNumber, highlightNumber);
         default:
-            clear();
-            setResult(0);
-            break;
+            return 0;
     }
    }
 
@@ -98,10 +104,6 @@ export default function Keyboard() {
     return <ThemeText>{highlightNumber}</ThemeText>
    }
 
-   console.log(highlightNumber);
-   console.log(otherNumber);
-   console.log(result)
-
    return (
     <>
     <View>
@@ -112,7 +114,7 @@ export default function Keyboard() {
     <View style={styles.row}>
         <Button title="C" onPress={clear}/>
         <Button title="+/-" onPress={() => changeSign()}/>
-        <Button title="%" onPress={() => handleOperationPress("%")}/>
+        <Button title="%" onPress={() => alert("Work in progress :)")}/>
         <Button title="÷" onPress={() => handleOperationPress("÷")}/>
     </View>
     <View style={styles.row}>
@@ -134,10 +136,10 @@ export default function Keyboard() {
         <Button title="+" onPress={() => handleOperationPress("+")}/>
     </View>
     <View style={styles.row}>
-        <Button title="." onPress={() => alert("Work in progress")}/>
+        <Button title="." onPress={() => setFloating()}/>
         <Button title="0" onPress={() => handleNumberPress("0")}/>
-        <Button title="⌫" onPress={() => setHighlightNumber(highlightNumber.slice(0, -1))}/>
-        <Button title="=" onPress={() => getResult()}/>
+        <Button title="⌫" onPress={() => handleRemoveDigit()}/>
+        <Button title="=" onPress={() => handleGetResult()}/>
     </View>
     </>
    )
