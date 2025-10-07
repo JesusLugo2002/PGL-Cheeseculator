@@ -28,6 +28,9 @@ export default function Keyboard() {
      * Cambia el signo del ultimo numero añadido
      */
     const changeSign = () => {
+        if (result) {
+            setResult(Number(result) * -1)
+        }
         if (highlightNumber) {
             let num = Number(highlightNumber);
             setHighlightNumber((num * -1).toString())
