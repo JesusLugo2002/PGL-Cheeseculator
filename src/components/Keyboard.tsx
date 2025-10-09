@@ -11,7 +11,7 @@ export default function Keyboard() {
     const [otherNumber, setOtherNumber] = useState("");
     const [operation, setOperation] = useState("");
     const [result, setResult] = useState<Number | null>(null);
-
+    const [changedToPercentage, setChangedToPercentage] = useState(false);
     const maxNumberDisplayLength = 10;
 
     /**
@@ -22,6 +22,7 @@ export default function Keyboard() {
         setOtherNumber("");
         setOperation("")
         setResult(null);
+        setChangedToPercentage(false);
     }
 
     /**
@@ -35,6 +36,24 @@ export default function Keyboard() {
             let num = Number(highlightNumber);
             setHighlightNumber((num * -1).toString())
         }
+    }
+
+    /**
+     * Calcula el porcentaje del número o resultado
+     */
+    const percentageCalculator = () => {
+        if (!highlightNumber) {
+            return;
+        }
+        if (changedToPercentage == false) {
+            let num = Number(highlightNumber);
+            setHighlightNumber((num / 100).toString())
+        }
+        if (changedToPercentage == true) {
+            let num = Number(highlightNumber);
+            setHighlightNumber((num * 100).toString())
+        }
+        setChangedToPercentage(!changedToPercentage)        
     }
 
     /**
@@ -78,6 +97,7 @@ export default function Keyboard() {
      * @param {any} buttonValue El operador
      */
     const handleOperationPress = (buttonValue: string) => {
+        setChangedToPercentage(false);
         setOperation(buttonValue);
         if (result) {
             setOtherNumber(result.toString());
@@ -140,7 +160,7 @@ export default function Keyboard() {
     <View style={styles.row}>
         <Button title="C" onPress={clear}/>
         <Button title="+/-" onPress={() => changeSign()}/>
-        <Button title="%" onPress={() => alert("Work in progress :)")}/>
+        <Button title="%" onPress={() => percentageCalculator()}/>
         <Button title="÷" onPress={() => handleOperationPress("÷")}/>
     </View>
     <View style={styles.row}>
