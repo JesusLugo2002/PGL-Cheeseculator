@@ -1,5 +1,4 @@
-import Button from "@/components/Button";
-import Keyboard from "@/components/Keyboard";
+import CalculatorContainer from "@/containers/CalculatorContainer";
 import { ThemeContext } from "@/context/ThemeContext";
 import { myColors } from "@/styles/Colors";
 import { styles } from "@/styles/GlobalStyles";
@@ -8,11 +7,13 @@ import { Switch, View } from "react-native";
 
 export default function Index() {
   const [theme, useTheme] = useState("light");
+  const isThemeLight = theme === "light";
+  const mainTheme = isThemeLight ? styles.container : [styles.container, {backgroundColor: myColors.dark}]
   return (
     <ThemeContext.Provider value={theme}>
-      <View style={theme === "light" ? styles.container : [styles.container, {backgroundColor: myColors.dark}]}>
-        <Switch value={theme === "light"} onValueChange={() => useTheme(theme === "light" ? "dark" : "light")}></Switch>
-        <Keyboard/>
+      <View style={mainTheme}>
+        <Switch value={isThemeLight} onValueChange={() => useTheme(isThemeLight ? "dark" : "light")}></Switch>
+        <CalculatorContainer/>
       </View>
     </ThemeContext.Provider>
   );

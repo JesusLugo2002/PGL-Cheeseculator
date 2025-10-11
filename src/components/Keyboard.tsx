@@ -1,192 +1,59 @@
-import Operations from "@/modules/Operations";
-import { styles } from "@/styles/GlobalStyles";
-import { useState } from "react";
-import { View } from "react-native";
-import Button from "./Button";
-import ThemeText from "./ThemeText";
+import { View } from "react-native"
+import { styles } from "@/styles/GlobalStyles"
+import Button from "./Button"
 
+type Props = {
+    onClear: () => void
+    onKeyPress: (value: string) => void
+    onRemoveDigit: () => void
+    onEqualsPress: () => void
+    onChangeSign: () => void
+    onSetPercentage: () => void
+    onSetFloating: () => void
+}
 
-export default function Keyboard() {
-    const [highlightNumber, setHighlightNumber] = useState("");
-    const [otherNumber, setOtherNumber] = useState("");
-    const [operation, setOperation] = useState("");
-    const [result, setResult] = useState<Number | null>(null);
-    const [changedToPercentage, setChangedToPercentage] = useState(false);
-    const maxNumberDisplayLength = 10;
-
-    /**
-     * Restablece la calculadora a su estado inicial
-     */
-    const clear = () => {
-        setHighlightNumber("");
-        setOtherNumber("");
-        setOperation("")
-        setResult(null);
-        setChangedToPercentage(false);
-    }
-
-    /**
-     * Cambia el signo del ultimo numero añadido (o el resultado si se esta mostrando)
-     */
-    const changeSign = () => {
-        if (result) {
-            setResult(Number(result) * -1)
-        }
-        if (highlightNumber) {
-            let num = Number(highlightNumber);
-            setHighlightNumber((num * -1).toString())
-        }
-    }
-
-    /**
-     * Calcula el porcentaje del número o resultado
-     */
-    const percentageCalculator = () => {
-        if (!highlightNumber) {
-            return;
-        }
-        if (changedToPercentage == false) {
-            let num = Number(highlightNumber);
-            setHighlightNumber((num / 100).toString())
-        }
-        if (changedToPercentage == true) {
-            let num = Number(highlightNumber);
-            setHighlightNumber((num * 100).toString())
-        }
-        setChangedToPercentage(!changedToPercentage)        
-    }
-
-    /**
-     * Añade el punto decimal (si ya hay un punto, no lo hace)
-     */
-    const setFloating = () => {
-        if (!highlightNumber.includes(".")) {
-            setHighlightNumber(highlightNumber ? highlightNumber + "." : "0.")
-        }
-    }
-
-    /**
-     * Elimina el ultimo digito
-     */
-    const handleRemoveDigit = () => {
-        if (highlightNumber) {
-            setHighlightNumber(highlightNumber.slice(0, -1));
-        }
-    }
-
-    /**
-     * Imprime en la pantalla el numero (si se esta mostrando un resultado, sobrescribe el resultado)
-     * @param {any} buttonValue El valor numerico del boton
-     */
-    const handleNumberPress = (buttonValue: string) => {
-        if (highlightNumber == "0" && buttonValue == "0") {
-            return;
-        }
-
-        if (result != null) {
-            setResult(null);
-        }
-
-        if (highlightNumber.length < maxNumberDisplayLength) {
-            setHighlightNumber(highlightNumber + buttonValue);
-        }
-    }
-
-    /**
-     * Establece el operador para realizar la operacion matematica
-     * @param {any} buttonValue El operador
-     */
-    const handleOperationPress = (buttonValue: string) => {
-        setChangedToPercentage(false);
-        setOperation(buttonValue);
-        if (result) {
-            setOtherNumber(result.toString());
-            setHighlightNumber("");
-            setResult(null);
-        } else {
-            if (!otherNumber) {
-                setOtherNumber(highlightNumber == "" ? "0" : highlightNumber);
-                setHighlightNumber("");     
-            }
-        }
-    }
-
-    /**
-     * Muestra el resultado en pantalla
-     */
-    const handleGetResult = () => {
-        if (operation) {
-            clear();
-            setResult(getResult());
-        }
-    }
-
-   /**
-    * Devuelve el resultado dependiendo del operador asignado
-    */
-   const getResult = () => {
-    switch (operation) {
-        case "+":
-            return Operations.add(otherNumber, highlightNumber);
-        case "-":
-            return Operations.substract(otherNumber, highlightNumber);
-        case "x":
-            return Operations.multiply(otherNumber, highlightNumber);
-        case "÷":
-            return Operations.divide(otherNumber, highlightNumber);
-        default:
-            return 0;
-    }
-   }
-
-   /**
-    * Genera la etiqueta donde se muestra el ultimo numero añadido o el resultado (si ya se ha procesado)
-    */
-   const highlightNumberDisplay = () => {
-    if (result) {
-        return <ThemeText>{result?.toString()}</ThemeText>
-    }
-    if (Number(highlightNumber) < 0) {
-        return <ThemeText>({highlightNumber})</ThemeText>
-    }
-    return <ThemeText>{highlightNumber}</ThemeText>
-   }
-
-   return (
-    <>
-    <View>
-        <ThemeText>{otherNumber}{operation}{highlightNumberDisplay()}</ThemeText>        
-    </View>
-    <View style={styles.row}>
-        <Button title="C" onPress={clear}/>
-        <Button title="+/-" onPress={() => changeSign()}/>
-        <Button title="%" onPress={() => percentageCalculator()}/>
-        <Button title="÷" onPress={() => handleOperationPress("÷")}/>
-    </View>
-    <View style={styles.row}>
-        <Button title="7" onPress={() => handleNumberPress("7")}/>
-        <Button title="8" onPress={() => handleNumberPress("8")}/>
-        <Button title="9" onPress={() => handleNumberPress("9")}/>
-        <Button title="x" onPress={() => handleOperationPress("x")}/>
-    </View>
-    <View style={styles.row}>
-        <Button title="4" onPress={() => handleNumberPress("4")}/>
-        <Button title="5" onPress={() => handleNumberPress("5")}/>
-        <Button title="6" onPress={() => handleNumberPress("6")}/>
-        <Button title="-" onPress={() => handleOperationPress("-")}/>
-    </View>
-    <View style={styles.row}>
-        <Button title="1" onPress={() => handleNumberPress("1")}/>
-        <Button title="2" onPress={() => handleNumberPress("2")}/>
-        <Button title="3" onPress={() => handleNumberPress("3")}/>
-        <Button title="+" onPress={() => handleOperationPress("+")}/>
-    </View>
-    <View style={styles.row}>
-        <Button title="." onPress={() => setFloating()}/>
-        <Button title="0" onPress={() => handleNumberPress("0")}/>
-        <Button title="⌫" onPress={() => handleRemoveDigit()}/>
-        <Button title="=" onPress={() => handleGetResult()}/>
-    </View>
-    </>
-   )
+export default function Keyboard({
+    onClear,
+    onKeyPress,
+    onRemoveDigit,
+    onEqualsPress,
+    onChangeSign,
+    onSetPercentage,
+    onSetFloating
+}: Props) {
+    
+    return (
+        <>
+        <View style={styles.row}>
+            <Button title="C" onPress={onClear}/>
+            <Button title="+/-" onPress={() => onChangeSign()}/>
+            <Button title="%" onPress={() => onSetPercentage()}/>
+            <Button title="÷" onPress={() => onKeyPress("/")}/>
+        </View>
+        <View style={styles.row}>
+            <Button title="7" onPress={() => onKeyPress("7")}/>
+            <Button title="8" onPress={() => onKeyPress("8")}/>
+            <Button title="9" onPress={() => onKeyPress("9")}/>
+            <Button title="x" onPress={() => onKeyPress("*")}/>
+        </View>
+        <View style={styles.row}>
+            <Button title="4" onPress={() => onKeyPress("4")}/>
+            <Button title="5" onPress={() => onKeyPress("5")}/>
+            <Button title="6" onPress={() => onKeyPress("6")}/>
+            <Button title="-" onPress={() => onKeyPress("-")}/>
+        </View>
+        <View style={styles.row}>
+            <Button title="1" onPress={() => onKeyPress("1")}/>
+            <Button title="2" onPress={() => onKeyPress("2")}/>
+            <Button title="3" onPress={() => onKeyPress("3")}/>
+            <Button title="+" onPress={() => onKeyPress("+")}/>
+            </View>
+        <View style={styles.row}>
+            <Button title="." onPress={() => onSetFloating()}/>
+            <Button title="0" onPress={() => onKeyPress("0")}/>
+            <Button title="⌫" onPress={() => onRemoveDigit()}/>
+            <Button title="=" onPress={() => onEqualsPress()}/>
+        </View>
+        </>
+    )
 }
