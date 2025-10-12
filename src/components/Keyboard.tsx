@@ -24,7 +24,7 @@ export default function Keyboard({
 
     const layout = [
         [
-            { key: "C", onPress: () => onClear() }, 
+            { key: "C", onPress: () => onClear()}, 
             { key: "+/-", onPress: () => onChangeSign() }, 
             { key: "%", onPress: () => onSetPercentage() }, 
             { key: "÷", onPress: () => onKeyPress("/") }
