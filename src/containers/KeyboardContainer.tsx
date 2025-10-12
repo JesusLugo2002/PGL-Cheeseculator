@@ -59,7 +59,6 @@ export default function KeyboardContainer({
     }
 
     const handleEqualsPress = () => {
-        getLastNumber();
         if (lastKeyIsOperator) {
             return;
         }
