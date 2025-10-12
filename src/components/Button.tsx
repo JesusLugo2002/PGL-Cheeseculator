@@ -22,7 +22,7 @@ export default function Button({ title, onPress, color }: ButtonProps) {
     }
     return (
         <TouchableOpacity style={buttonStyle} onPress={onPress}>
-            <Text style={styles.textLight}>{title}</Text>
+            <Text style={styles.textDark}>{title}</Text>
         </TouchableOpacity>
     )
 }
