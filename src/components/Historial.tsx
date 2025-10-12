@@ -1,8 +1,10 @@
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import HistorialLog, { Log } from "./HistorialLog";
 import ThemeText from "./ThemeText";
 import { myColors } from "@/styles/Colors";
+import { ThemeContext } from "@/context/ThemeContext";
+import { styles } from "@/styles/GlobalStyles";
 
 type Props = {
     historial: Log[];
@@ -13,19 +15,20 @@ export default function Historial({historial}: Props) {
 
     const toggleModal = () => setVisible(!visible);
 
+    const theme = useContext(ThemeContext);
     return (
         <>
             <TouchableOpacity onPress={toggleModal}>
-                <Text style={styles.openText}>Historial</Text>
+                <Text style={[theme === "light" ? styles.textDark : styles.textLight,{fontWeight:"bold"}]}>Historial</Text>
             </TouchableOpacity>
 
             <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={toggleModal}>
-                <View style={styles.modalOverlay}>
-                    <View style={styles.modalContent}>
-                        <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
-                            <Text style={styles.closeText}>Cerrar</Text>
+                <View style={stylos.modalOverlay}>
+                    <View style={stylos.modalContent}>
+                        <TouchableOpacity style={stylos.closeButton} onPress={toggleModal}>
+                            <Text style={stylos.closeText}>Cerrar</Text>
                         </TouchableOpacity>
-                        <Text style={styles.title}>Historial</Text>
+                        <Text style={stylos.title}>Historial</Text>
                         <ScrollView>
                         {historial.map((log, index) => (
                             <HistorialLog
@@ -42,7 +45,7 @@ export default function Historial({historial}: Props) {
     )
 }
 
-const styles = StyleSheet.create({
+const stylos = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',

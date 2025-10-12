@@ -35,6 +35,15 @@ export const styles = StyleSheet.create({
         borderRadius:90,
         margin: 5,
     },
+        buttonQuesoAzul: {
+        backgroundColor: myColors.quesoAzul,
+        width: 70,
+        height: 70,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius:90,
+        margin: 5,
+    },
     textLight: {
         color: myColors.white,
         fontSize: 24,
