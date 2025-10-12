@@ -99,11 +99,7 @@ export default function KeyboardContainer({
             return;
         }
 
-        if (lastNumber.startsWith("(-")) {
-            setLastNumber(lastNumber.slice(2, -1))
-        } else {
-            setLastNumber(`(-${lastNumber})`);
-        }
+        setLastNumber(isNegative(lastNumber) ? lastNumber.slice(2, -1) : `(-${lastNumber})`)
     }
 
     const handleSetPercentage = () => {
@@ -111,13 +107,9 @@ export default function KeyboardContainer({
         if (!lastNumber) {
             return;
         }
-        let result = Number(lastNumber.startsWith("(-") ? lastNumber.slice(2, -1) : lastNumber);
-        if (isPercentage) {
-            result *= 100;
-        } else {
-            result /= 100;
-        }
-        setLastNumber(lastNumber.startsWith("(-") ? `(-${result})` : result.toString());
+        let result = Number(isNegative(lastNumber) ? lastNumber.slice(2, -1) : lastNumber);
+        result = isPercentage ? result * 100 : result / 100;
+        setLastNumber(isNegative(lastNumber) ? `(-${result})` : result.toString());
         setToPercentage(!isPercentage);
     }
 
