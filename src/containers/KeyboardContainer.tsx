@@ -68,6 +68,10 @@ export default function KeyboardContainer({
         setDisplay(operationResult);
     }
 
+    const isNegative = (value: string) => {
+        return value.startsWith("(-");
+    }
+
     const getLastNumber = () => {
         const match = operation.match(LAST_NUMBER_PATTERN);
         if (match) {
@@ -119,7 +123,13 @@ export default function KeyboardContainer({
     }
 
     const handleSetFloating = () => {
-        
+        const lastNumber = getLastNumber();
+        if (!lastNumber || result) {
+            return;
+        }
+        if (!lastNumber.includes(".") && !isNegative(lastNumber)) {
+            setLastNumber(`${lastNumber}.`);
+        }
     }
 
     return <Keyboard
