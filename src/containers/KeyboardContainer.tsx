@@ -3,11 +3,10 @@ import { useEffect, useState } from "react";
 
 type Props = {
     setDisplay: (operation: string) => void
+    addLog: (operation: string, result: string) => void
 }
 
-export default function KeyboardContainer({
-    setDisplay
-}: Props) {
+export default function KeyboardContainer({setDisplay, addLog}: Props) {
     const [operation, setOperation] = useState<string>("");
     const [result, setResult] = useState<number|null>(null);
     const [isPercentage, setToPercentage] = useState(false);
@@ -21,6 +20,12 @@ export default function KeyboardContainer({
     useEffect(() => {
         setDisplay(operation);
     }, [operation]);
+
+    useEffect(() => {
+        if (resultNotNull) {
+            addLog(operation, result.toString());
+        }
+    }, [result]);
 
     /**
      * Reestablece la calculadora
@@ -55,6 +60,9 @@ export default function KeyboardContainer({
             setResult(null);
             return;
         }
+        if (operation == "0" && keyValue == "0") {
+            return;
+        }
         if (!operation && keyValueIsOperator) {
             setOperation("0" + keyValue);
             return;
@@ -80,7 +88,7 @@ export default function KeyboardContainer({
         if (lastKeyIsOperator) {
             return;
         }
-        const operationResult = eval(operation);
+        const operationResult = eval(operation.charAt(0) == "0" ? operation.slice(1) : operation);
         setResult(operationResult);
         setDisplay(operationResult);
         return operationResult;
