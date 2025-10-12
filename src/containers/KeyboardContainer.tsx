@@ -10,8 +10,10 @@ export default function KeyboardContainer({
 }: Props) {
     const [operation, setOperation] = useState<string>("");
     const [result, setResult] = useState<number|null>(null);
+    const [isPercentage, setToPercentage] = useState(false);
 
     const OPERATORS = ["+", "-", "*", "/"];
+    const LAST_NUMBER_PATTERN = /((?:\d+[\+\-\*\/])*)((?:\d+(?:\.\d+)?)|(?:\(\-\d+(?:\.\d+)?)\))$/;
 
     const lastKeyIsOperator = OPERATORS.includes(operation.charAt(operation.length - 1))
     const resultNotNull = result || result == 0
@@ -23,10 +25,14 @@ export default function KeyboardContainer({
     const clear = () => {
         setResult(null);
         setOperation("");
+        setToPercentage(false);
     }
 
     const handleKeyPress = (keyValue: string) => {
         const keyValueIsOperator = OPERATORS.includes(keyValue)
+        if (keyValueIsOperator) {
+            setToPercentage(false);
+        }
         if (keyValueIsOperator && lastKeyIsOperator) {
             setOperation(operation.replace(/[\+\-\*\/]$/, keyValue))
             return;
@@ -53,12 +59,28 @@ export default function KeyboardContainer({
     }
 
     const handleEqualsPress = () => {
+        getLastNumber();
         if (lastKeyIsOperator) {
             return;
         }
         const operationResult = eval(operation);
         setResult(operationResult);
         setDisplay(operationResult);
+    }
+
+    const getLastNumber = () => {
+        const match = operation.match(LAST_NUMBER_PATTERN);
+        if (match) {
+            return match[2];
+        }
+    }
+
+    const setLastNumber = (newValue: string) => {
+        if (LAST_NUMBER_PATTERN.test(operation)) {
+            setOperation(operation.replace(LAST_NUMBER_PATTERN, (_, operator, _number) => {
+                return operator + newValue;
+            }))
+        }
     }
 
     const handleChangeSign = () => {
@@ -69,22 +91,31 @@ export default function KeyboardContainer({
             return;
         }
 
-        if (/^\d+$|^\(-?\d+\)$/.test(operation)) {
-            setOperation(operation.startsWith("(-") ? operation.slice(2, -1) : `(-${operation})`);
+        const lastNumber = getLastNumber();
+        if (!lastNumber) {
             return;
         }
 
-        setOperation(operation.replace(/([\+\-\*\/])(\d+|\(\-?\d+\))$/, (_, operator, number) => {
-            if (number.startsWith("(-")) {
-                const positive = number.slice(2, -1)
-                return operator + positive;
-            }
-            return operator + `(-${number})`;
-        }));
+        if (lastNumber.startsWith("(-")) {
+            setLastNumber(lastNumber.slice(2, -1))
+        } else {
+            setLastNumber(`(-${lastNumber})`);
+        }
     }
 
     const handleSetPercentage = () => {
-        setOperation
+        const lastNumber = getLastNumber();        
+        if (!lastNumber) {
+            return;
+        }
+        let result = Number(lastNumber.startsWith("(-") ? lastNumber.slice(2, -1) : lastNumber);
+        if (isPercentage) {
+            result *= 100;
+        } else {
+            result /= 100;
+        }
+        setLastNumber(lastNumber.startsWith("(-") ? `(-${result})` : result.toString());
+        setToPercentage(!isPercentage);
     }
 
     const handleSetFloating = () => {
