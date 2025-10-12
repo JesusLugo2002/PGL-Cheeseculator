@@ -22,13 +22,23 @@ export default function KeyboardContainer({
         setDisplay(operation);
     }, [operation]);
 
-    const clear = () => {
+    /**
+     * Reestablece la calculadora
+     * @returns {void}   
+     */
+    const clear = (): void => {
         setResult(null);
         setOperation("");
         setToPercentage(false);
     }
 
-    const handleKeyPress = (keyValue: string) => {
+    /**
+     * Gestiona el funcionamiento de una tecla al presionarla, dependiendo de si
+     * es un operador o un número.
+     * @param {string} keyValue:string
+     * @returns {void}
+     */
+    const handleKeyPress = (keyValue: string): void => {
         const keyValueIsOperator = OPERATORS.includes(keyValue)
         if (keyValueIsOperator) {
             setToPercentage(false);
@@ -52,41 +62,68 @@ export default function KeyboardContainer({
         setOperation(operation + keyValue);
     }
 
-    const handleRemoveDigit = () => {
+    /**
+     * Elimina el último dígito/operador
+     * @returns {void}
+     */
+    const handleRemoveDigit = (): void => {
         if (operation) {
             setOperation(operation.slice(0, -1))
         }
     }
 
-    const handleEqualsPress = () => {
+    /**
+     * Evalua la operación y devuelve el resultado.
+     * @returns {string|void} 
+     */
+    const handleEqualsPress = (): string|void => {
         if (lastKeyIsOperator) {
             return;
         }
         const operationResult = eval(operation);
         setResult(operationResult);
         setDisplay(operationResult);
+        return operationResult;
     }
 
-    const isNegative = (value: string) => {
+    /**
+     * Devuelve `true` si el número pasado por argumento es negativo, si no, `false`.
+     * @param {string} value Número a comprobar.
+     * @returns {boolean}
+     */
+    const isNegative = (value: string): boolean => {
         return value.startsWith("(-");
     }
 
-    const getLastNumber = () => {
+    /**
+     * Devuelve el último número de la operación.
+     * @returns {string}
+     */
+    const getLastNumber = (): string => {
         const match = operation.match(LAST_NUMBER_PATTERN);
-        if (match) {
-            return match[2];
-        }
+        return match ? match[2] : ""
     }
 
-    const setLastNumber = (newValue: string) => {
+    /**
+     * Actualiza el valor del último numero
+     * @param {string} newValue El valor para reemplazar
+     * @returns {boolean} `true` si pudo cambiarse, si no, `false`
+     */
+    const setLastNumber = (newValue: string): boolean => {
         if (LAST_NUMBER_PATTERN.test(operation)) {
             setOperation(operation.replace(LAST_NUMBER_PATTERN, (_, operator, _number) => {
                 return operator + newValue;
             }))
+            return true;
         }
+        return false;
     }
 
-    const handleChangeSign = () => {
+    /**
+     * Cambia el signo del último número de la operación.
+     * @returns {void}
+     */
+    const handleChangeSign = (): void => {
         if (result) {
             const newResult = result * -1;
             setResult(newResult);
@@ -102,7 +139,11 @@ export default function KeyboardContainer({
         setLastNumber(isNegative(lastNumber) ? lastNumber.slice(2, -1) : `(-${lastNumber})`)
     }
 
-    const handleSetPercentage = () => {
+    /**
+     * Convierte el último numero en un porcentaje decimal.
+     * @returns {void}
+     */
+    const handleSetPercentage = (): void => {
         const lastNumber = getLastNumber();        
         if (!lastNumber) {
             return;
@@ -113,7 +154,11 @@ export default function KeyboardContainer({
         setToPercentage(!isPercentage);
     }
 
-    const handleSetFloating = () => {
+    /**
+     * Añade el punto decimal (si no existe), en el último número.
+     * @returns {void}
+     */
+    const handleSetFloating = (): void => {
         const lastNumber = getLastNumber();
         if (!lastNumber || result) {
             return;
