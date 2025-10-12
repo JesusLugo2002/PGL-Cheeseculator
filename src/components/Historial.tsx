@@ -1,10 +1,8 @@
 import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useContext, useState } from "react";
 import HistorialLog, { Log } from "./HistorialLog";
-import ThemeText from "./ThemeText";
 import { myColors } from "@/styles/Colors";
 import { ThemeContext } from "@/context/ThemeContext";
-import { styles } from "@/styles/GlobalStyles";
 
 type Props = {
     historial: Log[];
@@ -18,17 +16,17 @@ export default function Historial({historial}: Props) {
     const theme = useContext(ThemeContext);
     return (
         <>
-            <TouchableOpacity onPress={toggleModal}>
-                <Text style={[theme === "light" ? styles.textDark : styles.textLight,{fontWeight:"bold"}]}>Historial</Text>
+            <TouchableOpacity onPress={toggleModal} style={styles.modalButton}>
+                <Text style={theme === "light" ? styles.modalButtonDark : styles.modalButtonLight}>Historial</Text>
             </TouchableOpacity>
 
             <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={toggleModal}>
-                <View style={stylos.modalOverlay}>
-                    <View style={stylos.modalContent}>
-                        <TouchableOpacity style={stylos.closeButton} onPress={toggleModal}>
-                            <Text style={stylos.closeText}>Cerrar</Text>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
+                            <Text style={styles.closeText}>Cerrar</Text>
                         </TouchableOpacity>
-                        <Text style={stylos.title}>Historial</Text>
+                        <Text style={styles.title}>Historial</Text>
                         <ScrollView>
                         {historial.map((log, index) => (
                             <HistorialLog
@@ -45,7 +43,24 @@ export default function Historial({historial}: Props) {
     )
 }
 
-const stylos = StyleSheet.create({
+const styles = StyleSheet.create({
+  modalButton: {
+    borderWidth: 1,
+    width: "75%",
+    borderColor: myColors.cheddar
+  },
+  modalButtonDark: {
+    color: myColors.dark,
+    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "bold"
+  },
+  modalButtonLight: {
+    color: myColors.white,
+    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "bold"
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',

@@ -64,7 +64,6 @@ export default function KeyboardContainer({setDisplay, addLog}: Props) {
             return;
         }
         if (!operation && keyValueIsOperator) {
-            setOperation("0" + keyValue);
             return;
         }
         setOperation(operation + keyValue);
@@ -88,7 +87,7 @@ export default function KeyboardContainer({setDisplay, addLog}: Props) {
         if (lastKeyIsOperator) {
             return;
         }
-        const operationResult = eval(operation.charAt(0) == "0" ? operation.slice(1) : operation);
+        const operationResult = eval(operation.charAt(0) == "0" && !OPERATORS.includes(operation.charAt(1)) ? operation.slice(1) : operation);
         setResult(operationResult);
         setDisplay(operationResult);
         return operationResult;
