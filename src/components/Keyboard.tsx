@@ -24,34 +24,34 @@ export default function Keyboard({
 
     const layout = [
         [
-            { key: "C", onPress: () => onClear()}, 
-            { key: "+/-", onPress: () => onChangeSign() }, 
-            { key: "%", onPress: () => onSetPercentage() }, 
-            { key: "÷", onPress: () => onKeyPress("/") }
+            { key: "C", onPress: () => onClear(),color: "cheddar" }, 
+            { key: "+/-", onPress: () => onChangeSign(), color: "quesoAzul" }, 
+            { key: "%", onPress: () => onSetPercentage(), color: "quesoAzul" }, 
+            { key: "÷", onPress: () => onKeyPress("/"), color: "quesoAzul" }
         ],
         [
             { key: "7", onPress: () => onKeyPress("7") }, 
             { key: "8", onPress: () => onKeyPress("8") }, 
             { key: "9", onPress: () => onKeyPress("9") }, 
-            { key: "x", onPress: () => onKeyPress("*") }
+            { key: "x", onPress: () => onKeyPress("*"), color: "quesoAzul" }
         ],
         [
             { key: "4", onPress: () => onKeyPress("4") }, 
             { key: "5", onPress: () => onKeyPress("5") }, 
             { key: "6", onPress: () => onKeyPress("6") }, 
-            { key: "-", onPress: () => onKeyPress("-") }
+            { key: "-", onPress: () => onKeyPress("-"), color: "quesoAzul" }
         ],
         [
             { key: "1", onPress: () => onKeyPress("1") }, 
             { key: "2", onPress: () => onKeyPress("2") }, 
             { key: "3", onPress: () => onKeyPress("3") }, 
-            { key: "+", onPress: () => onKeyPress("+") }
+            { key: "+", onPress: () => onKeyPress("+"),color: "quesoAzul" }
         ],
         [
             { key: ".", onPress: () => onSetFloating() }, 
             { key: "0", onPress: () => onKeyPress("0") }, 
-            { key: "⌫", onPress: () => onRemoveDigit() }, 
-            { key: "=", onPress: () => onEqualsPress() }
+            { key: "⌫", onPress: () => onRemoveDigit(), color: "cheddar" }, 
+            { key: "=", onPress: () => onEqualsPress(), color: "cheddar" }
         ]
     ]
     
@@ -64,6 +64,7 @@ export default function Keyboard({
                     key={`${rowIndex}-${buttonIndex}`} 
                     title={button.key} 
                     onPress={button.onPress} 
+                    color={button.color}
                 />
                 ))}
             </View>

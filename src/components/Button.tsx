@@ -1,19 +1,28 @@
 import { styles } from "@/styles/GlobalStyles";
 import { TouchableOpacity } from "react-native";
-import ThemeText from "./ThemeText";
-
+import { Text } from "react-native";
 interface ButtonProps {
     onPress: () => void;
     title: String;
-    isEdam?: boolean;
-    isCheddar?: boolean;
+    color?: String;
 }
 
-export default function Button({ title, onPress, isCheddar }: ButtonProps) {
-    const buttonStyle = isCheddar ? styles.buttonCheddar : styles.buttonEdam;
+export default function Button({ title, onPress, color }: ButtonProps) {
+    let buttonStyle;
+    switch (color) {
+        case "cheddar":
+            buttonStyle = styles.buttonCheddar;
+            break;
+        case "quesoAzul":
+            buttonStyle = styles.buttonQuesoAzul;
+            break;
+        default:
+            buttonStyle = styles.buttonEdam;
+            break;
+    }
     return (
         <TouchableOpacity style={buttonStyle} onPress={onPress}>
-            <ThemeText>{title}</ThemeText>
+            <Text style={styles.textDark}>{title}</Text>
         </TouchableOpacity>
     )
 }

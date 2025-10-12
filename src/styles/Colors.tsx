@@ -4,5 +4,5 @@ export const myColors={
     orange:'#F59527',
     edam:'#F0D49F',
     cheddar:'#e2a42d',
-    grisQueso:'#ffd06c'
+    quesoAzul:'#ffd06c'
 }
